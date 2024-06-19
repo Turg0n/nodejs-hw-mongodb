@@ -1,4 +1,4 @@
-import { ContactsCollection } from '../db/contact.js';
+import { ContactsCollection } from '../db/models/contact.js';
 
 export async function createContact(payload) {
   return await ContactsCollection.create(payload);

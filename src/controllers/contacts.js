@@ -1,5 +1,4 @@
 import createHttpError from 'http-errors';
-import { isValidObjectId } from 'mongoose';
 import {
   createContact,
   getAllContacts,
@@ -7,31 +6,32 @@ import {
   updateContact,
   deleteContact,
 } from '../services/contacts.js';
+import parsePaginationParams from '../utils/parsePaginationParams.js';
+import parseSortParams from '../utils/parseSortParams.js';
+import parseFilterParams from '../utils/parseFilterParams.js';
 
 export async function getAllContactsController(req, res) {
-  const contacts = await getAllContacts();
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const { type, isFavourite } = parseFilterParams(req.query);
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    type,
+    isFavourite,
+  });
 
   res.status(200).json({
     status: 200,
-    message: contacts.length
-      ? 'Successfully found contacts!'
-      : 'No contacts yet.',
+    message: 'Successfully found contacts!',
     data: contacts,
   });
 }
 
 export async function getContactByIdController(req, res, next) {
   const contactId = req.params.contactId;
-
-  if (!isValidObjectId(contactId)) {
-    next(
-      createHttpError(
-        400,
-        'Invalid contactId. Must be a 24 character hex string, 12 byte Uint8Array, or an integer at new ObjectId',
-      ),
-    );
-    return;
-  }
 
   const contact = await getContactById(contactId);
 
@@ -60,16 +60,6 @@ export async function postContactController(req, res) {
 export async function patchContactController(req, res, next) {
   const contactId = req.params.contactId;
 
-  if (!isValidObjectId(contactId)) {
-    next(
-      createHttpError(
-        400,
-        'Invalid contactId. Must be a 24 character hex string, 12 byte Uint8Array, or an integer at new ObjectId',
-      ),
-    );
-    return;
-  }
-
   const contact = await updateContact(contactId, req.body);
 
   if (!contact) {
@@ -86,16 +76,6 @@ export async function patchContactController(req, res, next) {
 
 export async function deleteContactController(req, res, next) {
   const contactId = req.params.contactId;
-
-  if (!isValidObjectId(contactId)) {
-    next(
-      createHttpError(
-        400,
-        'Invalid contactId. Must be a 24 character hex string, 12 byte Uint8Array, or an integer at new ObjectId',
-      ),
-    );
-    return;
-  }
 
   const contact = await deleteContact(contactId);
 

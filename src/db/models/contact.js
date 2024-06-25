@@ -11,6 +11,7 @@ export const ContactSchema = new Schema(
       enum: ['work', 'home', 'personal'],
       required: true,
       default: 'personal',
+      userId: { type: Schema.Types.ObjectId, ref: 'users', required: true },
     },
   },
   { timestamps: true, versionKey: false },

@@ -3,9 +3,10 @@ import cors from 'cors';
 import pino from 'pino-http';
 import env from './utils/env.js';
 import { ENV_VARS } from './const/envVars.js';
-import contactsRouter from './routers/contacts.js';
+import rootRouter from './routers/index.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
+import cookieParser from 'cookie-parser';
 
 export default function setupServer() {
   const PORT = Number(env(ENV_VARS.PORT, 3000));
@@ -19,11 +20,13 @@ export default function setupServer() {
     }),
   );
 
+  app.use(cookieParser());
+
   app.use(cors());
 
   app.use(express.json());
 
-  app.use(contactsRouter);
+  app.use(rootRouter);
 
   app.use('*', notFoundHandler);
 

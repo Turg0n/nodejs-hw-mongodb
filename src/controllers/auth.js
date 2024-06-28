@@ -1,7 +1,7 @@
 import {
   loginUser,
   logoutUser,
-  refreshUserSession,
+  refreshUsersSession,
   registerUser,
 } from '../services/auth.js';
 import { setupCookies } from '../utils/setupCookies.js';

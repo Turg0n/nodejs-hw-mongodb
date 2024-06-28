@@ -11,7 +11,7 @@ import cookieParser from 'cookie-parser';
 export default function setupServer() {
   const PORT = Number(env(ENV_VARS.PORT, 3000));
   const app = express();
-
+  app.use(cookieParser());
   app.use(
     pino({
       transport: {
@@ -20,7 +20,7 @@ export default function setupServer() {
     }),
   );
 
-  app.use(cookieParser());
+  
 
   app.use(cors());
 

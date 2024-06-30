@@ -14,26 +14,22 @@ import { authenticate } from '../middlewares/authenticate.js';
 
 const contactsRouter = Router();
 
-contactsRouter.use('/:contactId', validateMongoId);
+contactsRouter.use(authenticate);
 
-contactsRouter.use('/', authenticate);
+contactsRouter.use('/:userId', validateMongoId);
 
-contactsRouter.get('', ctrlWrapper(getAllContactsController));
+contactsRouter.get('/', ctrlWrapper(getAllContactsController));
 
 contactsRouter.get('/:contactId', ctrlWrapper(getContactByIdController));
 
-contactsRouter.post(
-  '',
-  validateBody(createContactSchema),
-  ctrlWrapper(createContactController),
-);
-
-contactsRouter.patch(
-  '/:contactId',
-  validateBody(updateContactSchema),
-  ctrlWrapper(patchContactController),
-);
+contactsRouter.post('/', validateBody(createContactSchema), ctrlWrapper(createContactController));
 
 contactsRouter.delete('/:contactId', ctrlWrapper(deleteContactController));
+
+contactsRouter.patch('/:contactId', validateBody(updateContactSchema), ctrlWrapper(patchContactController));
+
+
+
+contactsRouter.get('/', ctrlWrapper(getAllContactsController));
 
 export default contactsRouter;

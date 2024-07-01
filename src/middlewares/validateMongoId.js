@@ -1,18 +1,10 @@
-import createHttpError from 'http-errors';
-import { isValidObjectId } from 'mongoose';
-
-export default function validateMongoId(req, res, next) {
-  const contactId = req.params.contactId;
-
-  if (!isValidObjectId(contactId)) {
-    next(
-      createHttpError(
-        400,
-        'Invalid contactId. Must be a 24 character hex string, 12 byte Uint8Array, or an integer at new ObjectId',
-      ),
-    );
-    return;
+export const checkUserId = (req, res, next) => {
+  const userId= req.user._id;
+  if (req.params.userId === userId) {
+      next()
+  } else {
+      res.status(403).json({ success: false, message: 'Access is denied'});
   }
-
-  next();
 }
+
+export default checkUserId

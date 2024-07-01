@@ -22,10 +22,15 @@ function parseSortBy(sortBy) {
 
 
 
-export default function parseSortParams(query) {
-  const { sortBy, sortOrder } = query;
+export const parseSortParams = (query) => {
+  const { sortOrder, sortBy } = query;
+
+  const parsedSortOrder = parseSortOrder(sortOrder);
+  const parsedSortBy = parseSortBy(sortBy);
+
   return {
-    sortBy: parseSortBy(sortBy),
-    sortOrder: parseSortOrder(sortOrder),
+      sortOrder: parsedSortOrder,
+      sortBy: parsedSortBy,
   };
-}
+};
+export default parseSortParams

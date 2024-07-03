@@ -1,37 +1,30 @@
 import express from 'express';
 import cors from 'cors';
-import pino from 'pino-http';
 import env from './utils/env.js';
+import { ENV_VARS } from './const/envVars.js';
 import rootRouter from './routers/index.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
-import cookieParser from 'cookie-parser';
+import cookiesParser from 'cookie-parser';
 
-const PORT = Number(env('PORT', '3000'));
 
-export const setupServer = () => {
+export const setupServer=()=> {
   const app = express();
-
-  app.use(express.json());
   app.use(cors());
-  app.use(cookieParser());
 
   app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
+    express.json({
+      limit: '1mb',
+      type: ['application/json', 'application/vnd.api+json'],
     }),
   );
-
+  app.use(cookiesParser());
   app.use(rootRouter);
-
-  app.use('*', notFoundHandler);
-
   app.use(errorHandler);
-
+  app.use(notFoundHandler);
+  const PORT = env(ENV_VARS.PORT, 3000);
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
-};
-export default setupServer
+  
+}

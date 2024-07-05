@@ -3,6 +3,8 @@ import {
   logoutUser,
   refreshSession,
   registerUser,
+  resetPassword,
+  sendResetPassword
 } from '../services/auth.js';
 import { THIRTY_DAYS } from '../const/index.js';
 

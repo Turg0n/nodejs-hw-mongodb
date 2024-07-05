@@ -6,7 +6,7 @@ import rootRouter from './routers/index.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
 import cookiesParser from 'cookie-parser';
-
+import { UPLOAD_DIR } from './const/index.js';
 
 export const setupServer=()=> {
   const app = express();
@@ -18,6 +18,7 @@ export const setupServer=()=> {
       type: ['application/json', 'application/vnd.api+json'],
     }),
   );
+  app.use('/uploads', express.static(UPLOAD_DIR));
   app.use(cookiesParser());
   app.use(rootRouter);
   app.use(errorHandler);
